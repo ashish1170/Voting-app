@@ -1,65 +1,120 @@
-# Example Voting App
+Example Voting App
 
-A simple distributed application running across multiple Docker containers.
+A simple distributed voting application built using multiple Docker containers and deployed with Docker Compose, Docker Swarm, and Kubernetes.
 
-## Getting started
+ Project Overview
 
-Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Mac or Windows. [Docker Compose](https://docs.docker.com/compose) will be automatically installed. On Linux, make sure you have the latest version of [Compose](https://docs.docker.com/compose/install/).
+This project demonstrates a microservices-based application architecture where multiple services communicate with each other using containers. It is designed to showcase containerization, orchestration, networking, and deployment concepts in DevOps.
 
-This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres for storage.
+The application allows users to vote between two options, stores the votes in a database, and displays live voting results.
 
-Run in this directory to build and run the app:
+ Technologies Used
+Frontend: Python Flask
+Result Application: Node.js
+Worker Service: .NET Core
+Message Broker: Redis
+Database: PostgreSQL
+Containerization: Docker
+Container Orchestration: Docker Compose, Docker Swarm, Kubernetes
+ Application Architecture
 
-```shell
+The application consists of the following services:
+
+Vote Service (Python Flask)
+Provides a web interface for users to vote.
+Redis Service
+Acts as a message queue and temporarily stores votes.
+Worker Service (.NET)
+Reads votes from Redis and processes them.
+PostgreSQL Database
+Permanently stores voting data.
+Result Service (Node.js)
+Displays voting results in real time.
+ Project Structure
+example-voting-app/
+│
+├── vote/                     # Python voting application
+├── result/                   # Node.js result application
+├── worker/                   # .NET worker service
+├── docker-compose.yml        # Docker Compose configuration
+├── docker-stack.yml          # Docker Swarm deployment file
+├── k8s-specifications/       # Kubernetes YAML files
+└── README.md
+ Prerequisites
+
+Before running the project, install the following:
+
+Docker Desktop
+Docker Compose
+Kubernetes
+kubectl
+ Running the Application using Docker Compose
+Step 1: Clone the Repository
+git clone <repository-url>
+cd example-voting-app
+Step 2: Start the Containers
 docker compose up
-```
+Step 3: Access the Application
+Service	URL
+Voting App	http://localhost:8080
 
-The `vote` app will be running at [http://localhost:8080](http://localhost:8080), and the `results` will be at [http://localhost:8081](http://localhost:8081).
-
-Alternately, if you want to run it on a [Docker Swarm](https://docs.docker.com/engine/swarm/), first make sure you have a swarm. If you don't, run:
-
-```shell
+Result App	http://localhost:8081
+ Running the Application using Docker Swarm
+Step 1: Initialize Docker Swarm
 docker swarm init
-```
-
-Once you have your swarm, in this directory run:
-
-```shell
+Step 2: Deploy the Stack
 docker stack deploy --compose-file docker-stack.yml vote
-```
+Step 3: Verify Services
+docker service ls
+ Running the Application in Kubernetes
 
-## Run the app in Kubernetes
+The Kubernetes deployment files are available inside the k8s-specifications folder.
 
-The folder k8s-specifications contains the YAML specifications of the Voting App's services.
-
-Run the following command to create the deployments and services. Note it will create these resources in your current namespace (`default` if you haven't changed it.)
-
-```shell
+Step 1: Deploy Resources
 kubectl create -f k8s-specifications/
-```
-
-The `vote` web app is then available on port 31000 on each host of the cluster, the `result` web app is available on port 31001.
-
-To remove them, run:
-
-```shell
+Step 2: Access the Services
+Service	Port
+Voting App	31000
+Result App	31001
+Step 3: Delete Kubernetes Resources
 kubectl delete -f k8s-specifications/
-```
+ Workflow of the Application
+User submits a vote through the web interface.
+Vote data is sent to Redis.
+Worker service retrieves votes from Redis.
+Votes are stored in PostgreSQL.
+Result service fetches data from PostgreSQL.
+Live voting results are displayed to users.
+ Features
+Multi-container application
+Real-time vote processing
+Docker Compose deployment
+Docker Swarm deployment
+Kubernetes deployment
+Persistent database storage
+Microservices architecture
+Container networking
+ Learning Outcomes
 
-## Architecture
+This project helps in understanding:
 
-![Architecture diagram](architecture.excalidraw.png)
+Docker containerization
+Multi-container communication
+Docker Compose
+Docker Swarm orchestration
+Kubernetes deployments and services
+Redis message queues
+PostgreSQL integration
+Microservices architecture
+🛠️ Useful Commands
+Stop Containers
+docker compose down
+View Running Containers
+docker ps
+View Kubernetes Pods
+kubectl get pods
+View Kubernetes Services
+kubectl get svc
+ Conclusion
 
-* A front-end web app in [Python](/vote) which lets you vote between two options
-* A [Redis](https://hub.docker.com/_/redis/) which collects new votes
-* A [.NET](/worker/) worker which consumes votes and stores them in…
-* A [Postgres](https://hub.docker.com/_/postgres/) database backed by a Docker volume
-* A [Node.js](/result) web app which shows the results of the voting in real time
-
-## Notes
-
-The voting application only accepts one vote per client browser. It does not register additional votes if a vote has already been submitted from a client.
-
-This isn't an example of a properly architected perfectly designed distributed app... it's just a simple
-example of the various types of pieces and languages you might see (queues, persistent data, etc), and how to
-deal with them in Docker at a basic level.
+The Example Voting App demonstrates how modern distributed applications can be deployed using containerization and orchestration technologies. It provides hands-on experience with Docker, Kubernetes, Redis, PostgreSQL, and microservices communication, making it an ideal DevOps learning project.

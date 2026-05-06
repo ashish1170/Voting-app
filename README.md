@@ -1,4 +1,4 @@
-# 🗳️ Example Voting App
+# Voting App
 
 > A cloud-native, microservices-based voting application demonstrating containerization and orchestration with Docker, Docker Swarm, and Kubernetes.
 
